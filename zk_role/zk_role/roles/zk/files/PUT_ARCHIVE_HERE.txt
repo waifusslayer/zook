@@ -1,0 +1,12 @@
+Положите сюда файл apache-zookeeper-3.9.3-bin.tar.gz
+(так же, как elasticsearch_exporter-1.10.0.tar.gz лежит в roles/es_exporter/files/)
+
+Скачать можно, например, отсюда:
+https://archive.apache.org/dist/zookeeper/zookeeper-3.9.3/apache-zookeeper-3.9.3-bin.tar.gz
+
+или с ближайшего зеркала Apache:
+https://dlcdn.apache.org/zookeeper/zookeeper-3.9.3/apache-zookeeper-3.9.3-bin.tar.gz
+
+После того как файл будет на месте, этот текстовый файл можно удалить —
+он используется только как fallback ("Air-gap fallback"), если прямая
+загрузка и загрузка через прокси не сработают (см. roles/zk/tasks/install.yml).

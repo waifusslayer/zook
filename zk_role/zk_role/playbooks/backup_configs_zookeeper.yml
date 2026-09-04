@@ -1,0 +1,11 @@
+---
+- name: Backup Zookeeper config
+  hosts: zookeeper
+  become: true
+  tasks:
+    - name: Backup config
+      ansible.builtin.shell: |
+        if [ -d {{ zk_conf_dir }} ]; then
+          tar czvf /home/devopsuser/zookeeper-$(date +%Y-%m-%d-%H-%M-%S).tar.gz {{ zk_conf_dir }}
+        fi
+      changed_when: false

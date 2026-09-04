@@ -1,0 +1,31 @@
+---
+zk_version: "3.9.3"
+
+zk_user: zookeeper
+zk_group: zookeeper
+
+zk_install_dir: "/opt/zookeeper"
+zk_symlink: "{{ zk_install_dir }}/apache-zookeeper-{{ zk_version }}-bin"
+
+zk_download_base_url: "https://archive.apache.org/dist/zookeeper"
+zk_download_url: "{{ zk_download_base_url }}/zookeeper-{{ zk_version }}/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+
+zk_data_dir: "/var/lib/zookeeper/data"
+zk_datalog_dir: "/var/lib/zookeeper/log"
+zk_log_dir: "/var/log/zookeeper"
+zk_conf_dir: "{{ zk_symlink }}/conf"
+
+zk_client_port: 2181
+zk_peer_port: 2888
+zk_leader_port: 3888
+
+zk_tick_time: 2000
+zk_init_limit: 10
+zk_sync_limit: 5
+zk_max_client_cnxns: 60
+zk_autopurge_snap_retain_count: 5
+zk_autopurge_purge_interval: 24
+zk_4lw_commands_whitelist: "srvr,mntr,ruok"
+
+zk_heap_size_min: "1g"
+zk_heap_size_max: "1g"

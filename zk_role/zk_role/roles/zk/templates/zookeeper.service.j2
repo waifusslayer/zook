@@ -1,0 +1,17 @@
+#jinja2: lstrip_blocks: True
+
+[Unit]
+Description=Apache Zookeeper
+After=network.target
+
+[Service]
+Type=simple
+User={{ zk_user }}
+Group={{ zk_group }}
+Environment="ZOOCFGDIR={{ zk_conf_dir }}"
+ExecStart={{ zk_symlink }}/bin/zkServer.sh start-foreground
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

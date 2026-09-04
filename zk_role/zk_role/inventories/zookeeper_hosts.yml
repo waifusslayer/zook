@@ -1,0 +1,18 @@
+zookeeper:
+  hosts:
+    zk01:
+      ansible_host: 10.0.118.230
+      zk_id: 1
+
+    zk02:
+      ansible_host: 10.0.118.231
+      zk_id: 2
+
+    zk03:
+      ansible_host: 10.0.118.232
+      zk_id: 3
+
+  vars:
+    zk_version: 3.9.3
+    zk_heap_size_min: 1g
+    zk_heap_size_max: 1g

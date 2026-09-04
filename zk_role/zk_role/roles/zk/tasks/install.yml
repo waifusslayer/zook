@@ -1,0 +1,80 @@
+---
+- name: Ensure Zookeeper group exists
+  ansible.builtin.group:
+    name: "{{ zk_group }}"
+    state: present
+
+- name: Ensure Zookeeper user exists
+  ansible.builtin.user:
+    name: "{{ zk_user }}"
+    group: "{{ zk_group }}"
+    system: true
+    shell: /sbin/nologin
+    create_home: false
+
+- name: Ensure install directory exists
+  ansible.builtin.file:
+    path: "{{ zk_install_dir }}"
+    state: directory
+    owner: "{{ zk_user }}"
+    group: "{{ zk_group }}"
+    mode: '0770'
+
+- name: Download Zookeeper archive (may take a while)
+  become: false
+  block:
+    - name: Download Zookeeper archive directly (may take a while)
+      ansible.builtin.get_url:
+        url: "{{ zk_download_url }}"
+        dest: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+        mode: '0664'
+      delegate_to: 127.0.0.1
+      run_once: true
+
+  rescue:
+    - name: Try proxy, and if it fails, use git files
+      block:
+        - name: Download Zookeeper archive through proxy (may take a while)
+          environment:
+            https_proxy: http://headproxy03.fortebank.com:8080
+          ansible.builtin.get_url:
+            url: "{{ zk_download_url }}"
+            dest: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+            mode: '0664'
+          delegate_to: 127.0.0.1
+          run_once: true
+
+      rescue:
+        - name: Copy Zookeeper archive from role files (Air-gap fallback)
+          ansible.builtin.copy:
+            src: "apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+            dest: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+            mode: '0664'
+          delegate_to: 127.0.0.1
+          run_once: true
+
+- name: Copy Zookeeper archive to target
+  ansible.builtin.copy:
+    src: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+    dest: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+    mode: '0444'
+
+- name: Unarchive Zookeeper from local to remote
+  ansible.builtin.unarchive:
+    src: "/tmp/apache-zookeeper-{{ zk_version }}-bin.tar.gz"
+    dest: "{{ zk_install_dir }}"
+    owner: "{{ zk_user }}"
+    group: "{{ zk_group }}"
+    remote_src: true
+
+- name: Create data, transaction log and log directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ zk_user }}"
+    group: "{{ zk_group }}"
+    mode: '0750'
+  with_items:
+    - "{{ zk_data_dir }}"
+    - "{{ zk_datalog_dir }}"
+    - "{{ zk_log_dir }}"

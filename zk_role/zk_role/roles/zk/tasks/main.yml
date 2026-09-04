@@ -1,0 +1,7 @@
+---
+- name: Install Zookeeper
+  ansible.builtin.import_tasks: "install.yml"
+  when: not ansible_check_mode
+
+- name: Configure Zookeeper
+  ansible.builtin.import_tasks: "configure.yml"

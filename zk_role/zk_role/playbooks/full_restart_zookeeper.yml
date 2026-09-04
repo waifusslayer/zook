@@ -1,0 +1,18 @@
+---
+- name: Full Restart
+  hosts: zookeeper
+  become: true
+  serial: 1
+  tasks:
+    - name: Restart Zookeeper
+      ansible.builtin.systemd:
+        name: zookeeper
+        state: restarted
+        daemon_reload: true
+
+    - name: Wait until node responds to ruok
+      ansible.builtin.wait_for:
+        port: "{{ zk_client_port }}"
+        host: "{{ ansible_host }}"
+        delay: 5
+        timeout: 60

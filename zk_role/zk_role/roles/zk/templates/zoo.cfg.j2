@@ -1,0 +1,18 @@
+tickTime={{ zk_tick_time }}
+initLimit={{ zk_init_limit }}
+syncLimit={{ zk_sync_limit }}
+
+dataDir={{ zk_data_dir }}
+dataLogDir={{ zk_datalog_dir }}
+clientPort={{ zk_client_port }}
+
+maxClientCnxns={{ zk_max_client_cnxns }}
+
+autopurge.snapRetainCount={{ zk_autopurge_snap_retain_count }}
+autopurge.purgeInterval={{ zk_autopurge_purge_interval }}
+
+4lw.commands.whitelist={{ zk_4lw_commands_whitelist }}
+
+{% for host in ansible_play_hosts_all %}
+server.{{ hostvars[host].zk_id }}={{ hostvars[host].ansible_host }}:{{ zk_peer_port }}:{{ zk_leader_port }}
+{% endfor %}
